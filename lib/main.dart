@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -24,15 +26,10 @@ class _MusicPlayerState extends State<MusicPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    Color appBarColor = Colors.transparent;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          title: const Text('Music Player'),
-          centerTitle: true,
-        ),
         body: Stack(
           children: [
             Container(
@@ -42,6 +39,33 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   image: AssetImage('assets/images/cover.jpg'),
                   fit: BoxFit.fill,
                 ),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: 28,
+                  sigmaY: 28,
+                ),
+                child: Container(
+                  color: Colors.black26,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AppBar(
+                backgroundColor: Colors.transparent,
+                title: ColorFiltered(
+                  colorFilter: ColorFilter.mode(
+                    appBarColor.computeLuminance() > 0.5
+                        ? Colors.black
+                        : Colors.white,
+                    BlendMode.srcIn,
+                  ),
+                  child: const Text('Music Player'),
+                ),
+                // Other app bar properties
               ),
             ),
           ],
