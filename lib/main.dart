@@ -25,6 +25,13 @@ class _MusicPlayerState extends State<MusicPlayer> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initplyer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Color appBarColor = Colors.transparent;
     return MaterialApp(
@@ -36,7 +43,7 @@ class _MusicPlayerState extends State<MusicPlayer> {
               constraints: const BoxConstraints.expand(),
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/cover.jpg'),
+                  image: AssetImage('assets/cover.jpg'),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -65,8 +72,75 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   ),
                   child: const Text('Music Player'),
                 ),
-                // Other app bar properties
               ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(30.0),
+                  child: Image.asset('assets/cover.jpg'),
+                ),
+                const SizedBox(
+                  height: 20.0,
+                ),
+                const Text(
+                  'Beethoven',
+                  style: TextStyle(
+                    color: Colors.white,
+                    letterSpacing: 6,
+                    fontSize: 36.0,
+                  ),
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      '00:00',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                      width: 200,
+                      child: Slider.adaptive(
+                        value: 0,
+                        onChanged: (value) {},
+                        activeColor: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      duration != null
+                          ? "${duration!.inMinutes} : ${duration!.inSeconds % 60}"
+                          : "Loading...",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(60.0),
+                    ),
+                    border: Border.all(color: Colors.pink),
+                    color: Colors.black26,
+                  ),
+                  child: const Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
