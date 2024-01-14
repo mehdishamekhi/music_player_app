@@ -112,16 +112,20 @@ class _MusicPlayerState extends State<MusicPlayer> {
                       width: 200,
                       child: Slider.adaptive(
                         onChangeEnd: (newvalue) async {
-                          setState(() {
-                            values = newvalue;
-                          });
+                          setState(() {});
                           await player
                               .seek(Duration(seconds: newvalue.toInt()));
                         },
                         min: 0.0,
                         value: values,
-                        max: 214.0,
-                        onChanged: (value) {},
+                        max: duration != null
+                            ? duration!.inSeconds.toDouble()
+                            : 214,
+                        onChanged: (newvalue) {
+                          setState(() {
+                            values = newvalue;
+                          });
+                        },
                         activeColor: Colors.white,
                       ),
                     ),
