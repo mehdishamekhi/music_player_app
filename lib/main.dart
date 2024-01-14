@@ -15,9 +15,11 @@ class MusicPlayer extends StatefulWidget {
 }
 
 class _MusicPlayerState extends State<MusicPlayer> {
+  bool isPlaying = false;
+  double values = 0.0;
   final player = AudioPlayer();
 
-  Duration? duration;
+  Duration? duration = Duration(seconds: 0);
   void initplyer() async {
     await player.setSource(AssetSource('music.mp3'));
 
@@ -99,9 +101,9 @@ class _MusicPlayerState extends State<MusicPlayer> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      '00:00',
-                      style: TextStyle(
+                    Text(
+                      '${(values / 60).floor()} : ${(values % 60).floor()}',
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                     ),
@@ -109,7 +111,16 @@ class _MusicPlayerState extends State<MusicPlayer> {
                       height: 20,
                       width: 200,
                       child: Slider.adaptive(
-                        value: 0,
+                        onChangeEnd: (newvalue) async {
+                          setState(() {
+                            values = newvalue;
+                          });
+                          await player
+                              .seek(Duration(seconds: newvalue.toInt()));
+                        },
+                        min: 0.0,
+                        value: values,
+                        max: 214.0,
                         onChanged: (value) {},
                         activeColor: Colors.white,
                       ),
@@ -126,8 +137,8 @@ class _MusicPlayerState extends State<MusicPlayer> {
                   height: 30,
                 ),
                 Container(
-                  height: 50,
-                  width: 50,
+                  height: 60,
+                  width: 60,
                   decoration: BoxDecoration(
                     borderRadius: const BorderRadius.all(
                       Radius.circular(60.0),
@@ -135,9 +146,31 @@ class _MusicPlayerState extends State<MusicPlayer> {
                     border: Border.all(color: Colors.pink),
                     color: Colors.black26,
                   ),
-                  child: const Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
+                  child: InkWell(
+                    onTap: () async {
+                      if (isPlaying) {
+                        await player.pause();
+                        setState(() {
+                          isPlaying = false;
+                        });
+                      } else {
+                        await player.resume();
+                        setState(() {
+                          isPlaying = true;
+                        });
+                        player.onDurationChanged.listen((positioned) {
+                          setState(() {
+                            values = positioned.inSeconds.toDouble();
+                          });
+                        });
+                        duration = await player.getDuration();
+                        setState(() {});
+                      }
+                    },
+                    child: Icon(
+                      isPlaying ? Icons.pause : Icons.play_arrow,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
